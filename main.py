@@ -78,11 +78,8 @@ vid = imageio.get_reader(filename,  'ffmpeg')
 detections = debug.read_detected_bounding_boxes()
 tracker = Tracking()
 
-writer1 = VideoWriter('tracking_result.mp4',frameSize=image_size,fps=24)
+writer1 = VideoWriter('tracking_res.mp4',frameSize=image_size,fps=24)
 writer1.open()
-
-# writer2 = VideoWriter('detection.mp4',frameSize=image_size,fps=2)
-# writer2.open()
 
 for i in range(len(detections)):
     frame = detections[i]['frame']
@@ -91,14 +88,10 @@ for i in range(len(detections)):
     bboxes = []
     for dict_box in boxes:
         bboxes.append(BoundingBox(dict_box))
-    # detection_img = visualizer.draw_labeled_bboxes(image,bboxes)
-    # writer2.write(detection_img)
-    # visualizer.draw_image(detection_img)
 
     tracker.prediction()
 
     tracker.update(bboxes)
 
-    # print(tracker.get_number_of_tracks())
     track_result = visualizer.draw_tracking(image, tracker)
     writer1.write(track_result)
