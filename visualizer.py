@@ -87,7 +87,7 @@ def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
     # Returns image with bounding boxes
     return draw_img
 
-def draw_image(img):
+def draw_image(img,title = '',save=False):
     """
     Draws image
     :param img: Image to draw
@@ -95,8 +95,23 @@ def draw_image(img):
     """
 
     # Draw image
+    f = plt.gcf()
     plt.imshow(img, cmap='gray')
+    plt.title(title)
     plt.show()
+    if save:
+        f.savefig('output_images/' + title + '.png')
+
+def draw_two_images(img1,img2,title = '',save=False):
+
+    # Draw image
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(24, 9))
+    f.tight_layout()
+    ax1.imshow(img1, cmap='gray')
+    ax2.imshow(img2, cmap='gray')
+    plt.show()
+    if save:
+        f.savefig('output_images/' + title + '.png')
 
 def draw_labeled_bboxes(img, bboxes):
     # Iterate through all detected cars
@@ -125,5 +140,8 @@ def draw_tracking(image,tracker):
     # draw_image(draw_img)
     return draw_img
 
-def save_image(image,frame):
-    plt.imsave('output_images/output'+ str(frame)+'.png',image)
+def read_and_draw_image(image_name,title):
+    image = cv2.imread(image_name)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    draw_image(image,title,True)
+    return image

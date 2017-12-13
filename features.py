@@ -1,6 +1,5 @@
 from skimage.feature import hog
 import cv2
-import matplotlib.image as mpimg
 import numpy as np
 
 # Define a function to extract features from a list of images
