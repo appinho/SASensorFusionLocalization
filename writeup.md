@@ -23,7 +23,7 @@ The executable code can be found in: `main.py`
 
 ### Detection
 
-#### 1. Feature extraction
+#### 1. Feature extraction and selection
 
 The code for the feature extraction can be found within the file `feature.py`.  
 
@@ -35,24 +35,28 @@ First, all `vehicle` and `non-vehicle` images are read. For illustration an exam
 
 Then, different color spaces were explored by applying `skimage.hog()` which has the parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).
 
-For the same example images as before, the `YCrCb` color space is used and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` are extraced. The results can be seen here:
+Various combinations of parameters and color spaces were tried but the final setup has been chosen as HOG features.
+For the same example images as before, the `YCrCb` color space is used and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` are extraced. The results can be seen here:  
 
+Y Channel of Car and its HOG features:  
 ![alt text][image3]
 
+Cr Channel of Car and its HOG features:  
 ![alt text][image4]
 
+Cb Channel of Car and its HOG features:  
 ![alt text][image5]
 
+Y Channel of NO Car and its HOG features:  
 ![alt text][image6]
 
+Cr Channel of NO Car and its HOG features:  
 ![alt text][image7]
 
+Cb Channel of NO Car and its HOG features:  
 ![alt text][image8]
 
-
-#### 2. Feature selection
-
-I tried various combinations of parameters and...
+Moreover, the spatial and histogram features were added.
 
 #### 3. Classifier training
 
