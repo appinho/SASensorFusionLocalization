@@ -1,13 +1,16 @@
 # Project: Vehicle Detection And Tracking
 
 [//]: # (Image References)
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
+[image1]: ./output_images/Car.png
+[image2]: ./output_images/No Car.png
+[image3]: ./output_images/Car Channel 0.png
+[image4]: ./output_images/Car Channel 1.png
+[image5]: ./output_images/Car Channel 2.png
+[image6]: ./output_images/No Car Channel 0.png
+[image7]: ./output_images/No Car Channel 1.png
+[image8]: ./output_images/No Car Channel 2.png
+[image9]: ./output_images/FirstDetection.png
+[image10]: ./output_images/FinalDetection.png
 
 ### Pipeline
 
@@ -21,7 +24,7 @@ The executable code can be found in: `main.py`
 
 #### 1. Feature extraction
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for the feature extraction can be found within the file `feature.py`.  
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
