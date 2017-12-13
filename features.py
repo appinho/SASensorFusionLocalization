@@ -67,7 +67,8 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
                                   pixels_per_cell=(pix_per_cell, pix_per_cell),
                                   cells_per_block=(cell_per_block, cell_per_block),
                                   transform_sqrt=True,
-                                  visualise=vis, feature_vector=feature_vec)
+                                  visualise=vis, feature_vector=feature_vec,
+                                  block_norm='L2-Hys')
         return features, hog_image
     # Otherwise call with one output
     else:
@@ -75,7 +76,8 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
                        pixels_per_cell=(pix_per_cell, pix_per_cell),
                        cells_per_block=(cell_per_block, cell_per_block),
                        transform_sqrt=True,
-                       visualise=vis, feature_vector=feature_vec)
+                       visualise=vis, feature_vector=feature_vec,
+                       block_norm='L2-Hys')
         return features
 
 # Define a function to compute binned color features

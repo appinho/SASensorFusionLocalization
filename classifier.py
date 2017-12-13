@@ -17,14 +17,14 @@ class Classifier(object):
         self.orient = 9
         self.pix_per_cell = 8
         self.cell_per_block = 2
-        self.hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
+        self.hog_channel = "ALL" # Can be 0, 1, 2, or "ALL"
         self.spatial_size = (32,32)
         self.hist_bins = 32
         self.spatial_feat = True
         self.hist_feat = True
         self.hog_feat = True
         self.training_examples = num_examples
-        self.y_start_stop = [400, 720]  # Min and max in y to search in slide_window()
+        self.y_start_stop = [400, 656]  # Min and max in y to search in slide_window()
 
     def train(self):
         cars = self.fill_data(self.root_car)
@@ -260,7 +260,7 @@ class Classifier(object):
 
         ystart = 400
         ystop = 656
-        scale = 1.5
+        scale = 1
         orient = 9
         pix_per_cell = 8
         cell_per_block = 2
@@ -332,5 +332,5 @@ class Classifier(object):
                                   (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 0, 255), 6)
 
         t2 = time.time()
-        # print(round(t2 - t1, 2), 'Seconds to classify one image')
+        print(round(t2 - t1, 2), 'Seconds to classify one image')
         return draw_img

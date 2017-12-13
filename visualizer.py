@@ -3,6 +3,21 @@ import cv2
 import matplotlib.pyplot as plt
 from bounding_box import BoundingBox
 
+color = {
+    0: [255, 0, 0],
+    1: [0, 255, 0],
+    2: [0, 0, 255],
+    3: [255, 255, 0],
+    4: [255, 0, 255],
+    5: [0, 255, 255],
+    6: [255, 0, 125],
+    7: [255, 125, 0],
+    8: [125, 255, 0],
+    9: [0, 255, 125],
+    10: [0, 125, 255],
+    11: [125, 0, 255],
+}
+
 def draw_spatially_binned_features(feature_vec):
     """
     Draws spatially binned feature vector
@@ -83,32 +98,32 @@ def draw_image(img):
     plt.imshow(img, cmap='gray')
     plt.show()
 
-def draw_labeled_bboxes(img, labels):
+def draw_labeled_bboxes(img, bboxes):
     # Iterate through all detected cars
-    bboxes = []
-    for car_number in range(1, labels[1]+1):
-        # Find pixels with each car_number label value
-        nonzero = (labels[0] == car_number).nonzero()
-        # Identify x and y values of those pixels
-        nonzeroy = np.array(nonzero[0])
-        nonzerox = np.array(nonzero[1])
-        # Define a bounding box based on min/max x and y
-        bbox = ((np.min(nonzerox), np.min(nonzeroy)), (np.max(nonzerox), np.max(nonzeroy)))
-        bboxes.append(BoundingBox(bbox))
+    for bbox in bboxes:
         # Draw the box on the image
-        cv2.rectangle(img, bbox[0], bbox[1], (0,0,255), 6)
+        cv2.rectangle(img, bbox.p1, bbox.p2, (0,0,255), 6)
     # Return the image
-    return img,bboxes
+    return img
 
-def draw_tracking(image,tracker,color):
+def draw_tracking(image,tracker):
     draw_img = np.copy(image)
 
     for track in tracker.list_of_tracks:
-        p1_x = np.int(track.box.x_center - track.box.width/2)
-        p2_x = np.int(track.box.x_center + track.box.width / 2)
-        p1_y = np.int(track.box.y_center - track.box.height / 2)
-        p2_y = np.int(track.box.y_center + track.box.height / 2)
-        cv2.rectangle(draw_img, (p1_x,p2_y), (p2_x,p1_y), color=color, thickness=3)
-
+        if track.age > 3:
+            col = color[track.id % len(color)]
+            p1_x = np.int(track.box.x_center - track.box.width/2)
+            p2_x = np.int(track.box.x_center + track.box.width / 2)
+            p1_y = np.int(track.box.y_center - track.box.height / 2)
+            p2_y = np.int(track.box.y_center + track.box.height / 2)
+            cv2.rectangle(draw_img, (p1_x,p2_y), (p2_x,p1_y), color=col, thickness=3)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(draw_img, 'ID ' + str(track.id) + ' AGE ' + str(track.age),
+                    (p1_x, p1_y - 10), font, 1, col, 2, cv2.LINE_AA)
+            cv2.putText(draw_img, 'B ' + str('%.2f' % track.belief),
+                    (p1_x, p1_y - 40), font, 1, col, 2, cv2.LINE_AA)
     # draw_image(draw_img)
     return draw_img
+
+def save_image(image,frame):
+    plt.imsave('output_images/output'+ str(frame)+'.png',image)
