@@ -1,16 +1,17 @@
 # Project: Vehicle Detection And Tracking
 
 [//]: # (Image References)
-[image1]: ./output_images/Car.png
-[image2]: ./output_images/No Car.png
-[image3]: ./output_images/Car Channel 0.png
-[image4]: ./output_images/Car Channel 1.png
-[image5]: ./output_images/Car Channel 2.png
-[image6]: ./output_images/No Car Channel 0.png
-[image7]: ./output_images/No Car Channel 1.png
-[image8]: ./output_images/No Car Channel 2.png
-[image9]: ./output_images/FirstDetection.png
-[image10]: ./output_images/FinalDetection.png
+
+[image1]: ./output_images/Car.png "Car"
+[image2]: ./output_images/No Car.png "No Car"
+[image3]: ./output_images/Car Channel 0.png "Y Channel of Car"
+[image4]: ./output_images/Car Channel 1.png "Cr Channel of Car"
+[image5]: ./output_images/Car Channel 2.png "Cb Channel of Car"
+[image6]: ./output_images/No Car Channel 0.png "Y Channel of No Car"
+[image7]: ./output_images/No Car Channel 1.png "Cr Channel of No Car"
+[image8]: ./output_images/No Car Channel 2.png "Cb Channel of No Car"
+[image9]: ./output_images/FirstDetection.png "Initial detection"
+[image10]: ./output_images/FinalDetection.png "Final detection"
 
 ### Pipeline
 
