@@ -83,9 +83,11 @@ The code can be found within `heatmap.py`.
 
 ### Tracking
 
+#### 1. Debugger
+
 For the debugging of the tracking a file `debugger.py` was used that saved the detection results over the project video `project_video.mp4` in a JSON file. Therefore, the SVM classification only needs to be run once which speeds up the debugging of the tracking.
 
-#### 1. Data association for removing False Positives
+#### 2. Data association for removing False Positives
 
 The tracking filter can be found in `tracking.py` and a single Track is defined in `track.py`. A track is simply a Bounding Box that was detection by the previous mentioned Detection step.  
 
@@ -94,7 +96,6 @@ In each frame, the image is read from the image and first of all each existing t
 When a track has found a measurement it is updated with a smoothing factor of `scaling_measurement = 0.3` to avoid abrupt changes within the state estimation of the track. When a track has not found a measurement within the region of `min_distance = 100` it is not updated but a counter `not_updated` is incremented. As soon as the ratio of not updated time frames falls below a threshold of `threshold_bad_track = 0.85` the track is deleted. With this way, the false positive detections can be removed over time. Last but not least, when a measurement has not been assigned to a track, a new track is initialized.  
 
 The tracking result can be found in the video on the top of this page.
-
 
 ### Discussion
 
