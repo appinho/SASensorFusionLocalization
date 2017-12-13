@@ -79,6 +79,8 @@ With `scipy.ndimage.measurements import label` all overlapping windows are combi
 
 ![alt text][image11]
 
+The code can be found within `heatmap.py`.
+
 ### Tracking
 
 #### 1. Data association for removing False Positives
