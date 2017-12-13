@@ -67,7 +67,7 @@ class Classifier(object):
                 fd, hog_image = hog(channel_image,
                                     orientations=self.orient, pixels_per_cell=(self.pix_per_cell, self.pix_per_cell),
                                 cells_per_block=(self.cell_per_block, self.cell_per_block), visualise=True)
-                visualizer.draw_two_images(channel_image,hog_image,title='No_Car_Channel ' + str(channel),save=True)
+                visualizer.draw_two_images(channel_image,hog_image,title='No_Car_Channel_' + str(channel),save=True)
 
         # TODO normalize data
         # TODO try different colorspaces
