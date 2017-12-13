@@ -10,14 +10,15 @@
 [image6]: ./output_images/No_Car_Channel_0.png "Y Channel of No Car"
 [image7]: ./output_images/No_Car_Channel_1.png "Cr Channel of No Car"
 [image8]: ./output_images/No_Car_Channel_2.png "Cb Channel of No Car"
-[image9]: ./output_images/FirstDetection.png "Initial detection"
-[image10]: ./output_images/FinalDetection.png "Final detection"
+[image8]: ./output_images/ROI.png "Region of interest"
+[image10]: ./output_images/FirstDetection.png "Initial detection"
+[image11]: ./output_images/FinalDetection.png "Final detection"
 
 ### Pipeline
 
 The resulting video can be found on YouTube by clicking on the image below:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/joKuHeSrCAo/0.jpg)](https://www.youtube.com/watch?v=joKuHeSrCAo)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/sWeFX5Ad_jM/0.jpg)](https://youtu.be/sWeFX5Ad_jM)
 
 The executable code can be found in: `main.py`
 
@@ -56,24 +57,25 @@ Cr Channel of NO Car and its HOG features:
 Cb Channel of NO Car and its HOG features:  
 ![alt text][image8]
 
-Moreover, the spatial and histogram features were added.
+Moreover, the spatial feature with `spatial_size=(32,32)` and histogram features with `hist_bins=32` were incorporated in the final feature vector.
 
 #### 3. Classifier training
 
-I trained a linear SVM using...
+A linear SVM with the above mentioned feature vector and as dataset 8500 examples of each class were used. Therefore, the data set was split up in 80% training examples and 20% test examples. As a result, a test accuracy of 99.7% was achieved
 
 #### 4. Sliding window search
 
 I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
-![alt text][image3]
+![alt text][image9]
 
 #### 5. Detection resulits
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
-![alt text][image4]
----
+![alt text][image10]
+
+![alt text][image11]
 
 ### Tracking
 
