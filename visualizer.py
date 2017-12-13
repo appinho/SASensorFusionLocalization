@@ -145,3 +145,10 @@ def read_and_draw_image(image_name,title):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     draw_image(image,title,True)
     return image
+
+def draw_roi(image):
+    bboxes = []
+    roi = BoundingBox([640,528,1280,256])
+    bboxes.append(roi)
+    roi_image = draw_labeled_bboxes(image,bboxes)
+    draw_image(roi_image,'ROI','True')

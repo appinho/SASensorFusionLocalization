@@ -25,7 +25,7 @@ class Classifier(object):
         self.hog_feat = True
         self.training_examples = num_examples
         self.y_start_stop = [400, 656]  # Min and max in y to search in slide_window()
-        self.debug = True
+        self.debug = False
 
     def train(self):
         cars = self.fill_data(self.root_car)
