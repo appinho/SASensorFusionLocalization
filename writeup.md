@@ -61,19 +61,21 @@ Moreover, the spatial feature with `spatial_size=(32,32)` and histogram features
 
 #### 3. Classifier training
 
-A linear SVM with the above mentioned feature vector and as dataset 8500 examples of each class were used. Therefore, the data set was split up in 80% training examples and 20% test examples. As a result, a test accuracy of 99.7% was achieved
+A linear SVM with the above mentioned feature vector and as dataset 8500 examples of each class were used. Therefore, the data set was split up in 80% training examples and 20% test examples. As a result, a test accuracy of 99.7% was achieved. The code can be find in `classifier.py`.
 
 #### 4. Sliding window search
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+A sliding window is applied with a window size of `xy_window = (96,96)` and an overlap of `xy_overlap = (0.5,0.5)` to search for detections of cars within the bottom part of the image. Therefore, a region of interest between the y-pixel values of `y_start_stop = [400,656]` is applied to save runtime and only look in potential regions. This region of interest is highlighted in the following image:  
 
 ![alt text][image9]
 
 #### 5. Detection resulits
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately, all detected parts of cars where gathered over the entire sliding window search. The result can be seen here.  
 
 ![alt text][image10]
+
+With `scipy.ndimage.measurements import label` all overlapping windows are combined which leads to following final detection result.
 
 ![alt text][image11]
 
@@ -81,30 +83,7 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 
 #### 1. Data association for removing False Positives
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
 
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-### 2. Here are six frames and their corresponding heatmaps:
-
-![alt text][image5]
-
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
-
----
-
-
-* Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier Linear SVM classifier
-* Optionally, you can also apply a color transform and append binned color features, as well as histograms of color, to your HOG feature vector. 
-* Note: for those first two steps don't forget to normalize your features and randomize a selection for training and testing.
-* Implement a sliding-window technique and use your trained classifier to search for vehicles in images.
-* Run your pipeline on a video stream (start with the test_video.mp4 and later implement on full project_video.mp4) and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
-* Estimate a bounding box for vehicles detected.
 
 ---
 
