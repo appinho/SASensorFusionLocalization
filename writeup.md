@@ -3,13 +3,13 @@
 [//]: # (Image References)
 
 [image1]: ./output_images/Car.png "Car"
-[image2]: ./output_images/No Car.png "No Car"
-[image3]: ./output_images/Car Channel 0.png "Y Channel of Car"
-[image4]: ./output_images/Car Channel 1.png "Cr Channel of Car"
-[image5]: ./output_images/Car Channel 2.png "Cb Channel of Car"
-[image6]: ./output_images/No Car Channel 0.png "Y Channel of No Car"
-[image7]: ./output_images/No Car Channel 1.png "Cr Channel of No Car"
-[image8]: ./output_images/No Car Channel 2.png "Cb Channel of No Car"
+[image2]: ./output_images/No_Car.png "No Car"
+[image3]: ./output_images/Car_Channel_0.png "Y Channel of Car"
+[image4]: ./output_images/Car_Channel_1.png "Cr Channel of Car"
+[image5]: ./output_images/Car_Channel_2.png "Cb Channel of Car"
+[image6]: ./output_images/No_Car_Channel_0.png "Y Channel of No Car"
+[image7]: ./output_images/No_Car_Channel_1.png "Cr Channel of No Car"
+[image8]: ./output_images/No_Car_Channel_2.png "Cb Channel of No Car"
 [image9]: ./output_images/FirstDetection.png "Initial detection"
 [image10]: ./output_images/FinalDetection.png "Final detection"
 
