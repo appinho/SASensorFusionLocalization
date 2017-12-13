@@ -25,7 +25,7 @@ class Classifier(object):
         self.hog_feat = True
         self.training_examples = num_examples
         self.y_start_stop = [400, 656]  # Min and max in y to search in slide_window()
-        self.debug = False
+        self.debug = True
 
     def train(self):
         cars = self.fill_data(self.root_car)
@@ -33,7 +33,7 @@ class Classifier(object):
 
         if self.debug:
             test_car = visualizer.read_and_draw_image(cars[0],'Car')
-            test_not_car = visualizer.read_and_draw_image(notcars[0],'No Car')
+            test_not_car = visualizer.read_and_draw_image(notcars[0],'No_Car')
 
         print(len(cars),len(notcars))
         # TODO see if image ranges from 0 to 1
@@ -59,7 +59,7 @@ class Classifier(object):
                 fd, hog_image = hog(channel_image,
                                     orientations=self.orient, pixels_per_cell=(self.pix_per_cell, self.pix_per_cell),
                                 cells_per_block=(self.cell_per_block, self.cell_per_block), visualise=True)
-                visualizer.draw_two_images(channel_image,hog_image,title='Car Channel ' + str(channel),save=True)
+                visualizer.draw_two_images(channel_image,hog_image,title='Car_Channel_' + str(channel),save=True)
 
             notcar_feat_image = cv2.cvtColor(test_not_car, cv2.COLOR_RGB2YCrCb)
             for channel in range(notcar_feat_image.shape[2]):
@@ -67,7 +67,7 @@ class Classifier(object):
                 fd, hog_image = hog(channel_image,
                                     orientations=self.orient, pixels_per_cell=(self.pix_per_cell, self.pix_per_cell),
                                 cells_per_block=(self.cell_per_block, self.cell_per_block), visualise=True)
-                visualizer.draw_two_images(channel_image,hog_image,title='No Car Channel ' + str(channel),save=True)
+                visualizer.draw_two_images(channel_image,hog_image,title='No_Car_Channel ' + str(channel),save=True)
 
         # TODO normalize data
         # TODO try different colorspaces
