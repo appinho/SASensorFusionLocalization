@@ -27,16 +27,28 @@ The executable code can be found in: `main.py`
 
 The code for the feature extraction can be found within the file `feature.py`.  
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+First, all `vehicle` and `non-vehicle` images are read. For illustration an example of each class is visualized:
 
 ![alt text][image1]
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
-
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
-
-
 ![alt text][image2]
+
+Then, different color spaces were explored by applying `skimage.hog()` which has the parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).
+
+For the same example images as before, the `YCrCb` color space is used and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` are extraced. The results can be seen here:
+
+![alt text][image3]
+
+![alt text][image4]
+
+![alt text][image5]
+
+![alt text][image6]
+
+![alt text][image7]
+
+![alt text][image8]
+
 
 #### 2. Feature selection
 
