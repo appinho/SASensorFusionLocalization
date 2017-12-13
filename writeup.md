@@ -83,15 +83,20 @@ The code can be found within `heatmap.py`.
 
 ### Tracking
 
+For the debugging of the tracking a file `debugger.py` was used that saved the detection results over the project video `project_video.mp4` in a JSON file. Therefore, the SVM classification only needs to be run once which speeds up the debugging of the tracking.
+
 #### 1. Data association for removing False Positives
 
+The tracking filter can be found in `tracking.py` and a single Track is defined in `track.py`. A track is simply a Bounding Box that was detection by the previous mentioned Detection step.  
 
+In each frame, the image is read from the image and first of all each existing tracks are predicted depending their stored pixel velocities with a linear motion model. Next, a data association step between the predicted tracks and the newly measured bounding boxes is performed. Therefore, a simple Nearest Neighbor Data Association is implemented that connects each track with its closest measurement if it is within a certain range. As metric, the euclidean distance of the x-coordinate, y-coordinate, width and height deviation of the compared bounding box is calculated. Whenever, this distance is below `min_distance = 100` a successful association is noted. This calculation is looped over all Track-Measurement combinations and the final association is found by looking for the minimal distance.  
 
----
+When a track has found a measurement it is updated with a smoothing factor of `scaling_measurement = 0.3` to avoid abrupt changes within the state estimation of the track. When a track has not found a measurement within the region of `min_distance = 100` it is not updated but a counter `not_updated` is incremented. As soon as the ratio of not updated time frames falls below a threshold of `threshold_bad_track = 0.85` the track is deleted. With this way, the false positive detections can be removed over time. Last but not least, when a measurement has not been assigned to a track, a new track is initialized.  
+
+The tracking result can be found in the video on the top of this page.
+
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+In the middle of the video sequence, the detection method has problems to detect the white car. A more detailed research has to be performed in future to probably adapt the feature vector or to add or change the used colorspace. Moreover, the tracking method struggles when the objects are occluded or close to each other. The occuring merging of bounding boxes or lost tracks need to be further investigated.
 
