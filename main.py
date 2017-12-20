@@ -11,13 +11,15 @@ from debugger import Debugger
 from bounding_box import BoundingBox
 
 # Hyperparameters
+write_detection = True
 image_size = (1280,720)
-num_examples = 8500
-hm_threshold = 0
+num_examples = 8792
+hm_threshold = 1
 
 # Train classifier
-# svm = Classifier(num_examples)
-# svm.train()
+if write_detection:
+    svm = Classifier(num_examples,image_size)
+    svm.train()
 
 # See test images
 # for image_name in os.listdir('test_images/'):
@@ -40,58 +42,54 @@ hm_threshold = 0
 #     visualizer.draw_roi(image)
 
 # See video
-debug = Debugger()
-
-# detected_boxes = []
-# time_range = range(0,1250)
-# for i in time_range:
-#     if i%100 ==0:
-#         print(i)
-#     # tracker.prediction()
-#     image = vid.get_data(i)
-#     prediction = visualizer.draw_tracking(image,tracker)
-#     # visualizer.draw_image(prediction)
-#     # print(np.max(image))
-#     result1,bboxes = svm.classify(image)
-#     # visualizer.draw_image(result1)
-#     bboxes = heatmap.cluster_bounding_boxes(image,bboxes,hm_threshold)
-#
-#     draw_img = visualizer.draw_labeled_bboxes(image, bboxes)
-#     # visualizer.draw_image(draw_img)
-#     # visualizer.save_image(detection_img,i)
-#     # writer1.write(detection_img)
-#     # result2 = svm.find_cars(image)
-#     # writer2.write(result2)
-#     # tracker.update(cluster_bboxes)
-#     # track_result = visualizer.draw_tracking(image,tracker)
-#     # visualizer.draw_image(track_result)
-#     # writer1.write(track_result)
-#     debug.store_detected_bounding_boxes(bboxes,i)
-#
-# debug.write_detection()
-
-
 filename = 'project_video.mp4'
 
 vid = imageio.get_reader(filename,  'ffmpeg')
+debug = Debugger()
+time_range = range(0,1260)
 
-detections = debug.read_detected_bounding_boxes()
-tracker = Tracking()
+if write_detection:
+    for i in time_range:
+        if i%100 ==0:
+            print(i)
+        image = vid.get_data(i)
+        result1,bboxes = svm.classify(image)
+        # visualizer.draw_image(result1)
+        bboxes = heatmap.cluster_bounding_boxes(image,bboxes,hm_threshold)
 
-writer1 = VideoWriter('tracking_res.mp4',frameSize=image_size,fps=24)
-writer1.open()
+        draw_img = visualizer.draw_labeled_bboxes(image, bboxes)
+        # visualizer.draw_image(draw_img)
 
-for i in range(len(detections)):
-    frame = detections[i]['frame']
-    image = vid.get_data(frame)
-    boxes = detections[i]['boxes']
-    bboxes = []
-    for dict_box in boxes:
-        bboxes.append(BoundingBox(dict_box))
+        debug.store_detected_bounding_boxes(bboxes,i)
 
-    tracker.prediction()
+    debug.write_detection()
 
-    tracker.update(bboxes)
+if not write_detection:
+    detections = debug.read_detected_bounding_boxes()
+    tracker = Tracking()
 
-    track_result = visualizer.draw_tracking(image, tracker)
-    writer1.write(track_result)
+    writer1 = VideoWriter('tracking_res.mp4',frameSize=image_size,fps=24)
+    writer1.open()
+
+    # writer2 = VideoWriter('detection_res.mp4',frameSize=image_size,fps=10)
+    # writer2.open()
+
+    for i in range(len(detections)):
+        frame = detections[i]['frame']
+        image = vid.get_data(frame)
+        boxes = detections[i]['boxes']
+        bboxes = []
+        for dict_box in boxes:
+            bboxes.append(BoundingBox(dict_box))
+
+        # detection_img = visualizer.draw_labeled_bboxes(image, bboxes)
+        # # visualizer.draw_image(detection_img,'FinalDetection',save=True)
+        # writer2.write(detection_img)
+
+
+        tracker.prediction()
+
+        tracker.update(bboxes)
+
+        track_result = visualizer.draw_tracking(image, tracker)
+        writer1.write(track_result)

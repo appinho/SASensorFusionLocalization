@@ -9,7 +9,7 @@ import cv2
 import visualizer
 
 class Classifier(object):
-    def __init__(self,num_examples):
+    def __init__(self,num_examples,image_size):
         self.root_car = '../vehicles'
         self.root_notcars = '../non-vehicles'
 
@@ -24,8 +24,18 @@ class Classifier(object):
         self.hist_feat = True
         self.hog_feat = True
         self.training_examples = num_examples
-        self.y_start_stop = [400, 656]  # Min and max in y to search in slide_window()
         self.debug = False
+
+        self.image_width = image_size[0]
+        self.image_height = image_size[1]
+
+        windows1 = self.slide_window(self.image_width,self.image_height, x_start_stop=[None, None], y_start_stop=[400,640],
+                                          xy_window=(128, 128), xy_overlap=(0.75, 0.75))
+        windows2 = self.slide_window(self.image_width,self.image_height, x_start_stop=[None, None], y_start_stop=[380,524],
+                                          xy_window=(48, 48), xy_overlap=(0.5, 0.5))
+
+        self.windows = windows1 + windows2
+        print("Number of Windows" , len(self.windows))
 
     def train(self):
         cars = self.fill_data(self.root_car)
@@ -107,20 +117,20 @@ class Classifier(object):
 
     def classify(self,image):
         t1 = time.time()
-        draw_image = np.copy(image)
-        windows = self.slide_window(image, x_start_stop=[None, None], y_start_stop=self.y_start_stop,
-                                          xy_window=(96, 96), xy_overlap=(0.5, 0.5))
 
-        hot_windows = self.search_windows(image, windows, self.svc, self.X_scaler, color_space=self.colorspace,
+
+        hot_windows = self.search_windows(image, self.windows, self.svc, self.X_scaler, color_space=self.colorspace,
                                                 spatial_size=self.spatial_size, hist_bins=self.hist_bins,
                                                 orient=self.orient, pix_per_cell=self.pix_per_cell,
                                                 cell_per_block=self.cell_per_block,
                                                 hog_channel=self.hog_channel, spatial_feat=self.spatial_feat,
                                                 hist_feat=self.hist_feat, hog_feat=self.hog_feat)
 
+        draw_image = np.copy(image)
         window_img = visualizer.draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
+
         t2 = time.time()
-        # print(round(t2 - t1, 2), 'Seconds to classify one image')
+        print(round(t2 - t1, 2), 'Seconds to classify one image')
         return window_img, hot_windows
 
 
@@ -134,7 +144,7 @@ class Classifier(object):
         return data_list
 
 
-    def slide_window(self,img, x_start_stop=(None, None), y_start_stop=(None, None),
+    def slide_window(self,image_width,image_height, x_start_stop=(None, None), y_start_stop=(None, None),
                      xy_window=(64, 64), xy_overlap=(0.5, 0.5)):
         """
         Method to slide a window over the image
@@ -152,7 +162,7 @@ class Classifier(object):
         else:
             x_start = x_start_stop[0]
         if not x_start_stop[1]:
-            x_stop = img.shape[1]
+            x_stop = image_width
         else:
             x_stop = x_start_stop[1]
         if not y_start_stop[0]:
@@ -160,7 +170,7 @@ class Classifier(object):
         else:
             y_start = y_start_stop[0]
         if not y_start_stop[1]:
-            y_stop = img.shape[0]
+            y_stop = image_height
         else:
             y_stop = y_start_stop[1]
 
