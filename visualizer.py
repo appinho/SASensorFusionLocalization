@@ -87,7 +87,7 @@ def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
     # Returns image with bounding boxes
     return draw_img
 
-def draw_image(img,title = '',save=False):
+def draw_image(img, title='', save=False):
     """
     Draws image
     :param img: Image to draw
@@ -98,11 +98,13 @@ def draw_image(img,title = '',save=False):
     f = plt.gcf()
     plt.imshow(img, cmap='gray')
     plt.title(title)
-    plt.show()
     if save:
         f.savefig('output_images/' + title + '.png')
+    else:
+        plt.show()
 
-def draw_two_images(img1,img2,title = '',save=False):
+
+def draw_two_images(img1, img2, title = '', save=False):
 
     # Draw image
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(24, 9))

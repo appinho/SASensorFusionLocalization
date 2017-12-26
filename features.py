@@ -8,6 +8,7 @@ def extract_features(imgs, color_space='RGB', spatial_size=(32, 32),
                      hist_bins=32, orient=9,
                      pix_per_cell=8, cell_per_block=2, hog_channel=0,
                      spatial_feat=True, hist_feat=True, hog_feat=True):
+
     # Create a list to append feature vectors to
     features = []
     # Iterate through the list of images
@@ -32,14 +33,14 @@ def extract_features(imgs, color_space='RGB', spatial_size=(32, 32),
         else:
             feature_image = np.copy(image)
 
-        if spatial_feat == True:
+        if spatial_feat:
             spatial_features = bin_spatial(feature_image, size=spatial_size)
             file_features.append(spatial_features)
-        if hist_feat == True:
+        if hist_feat:
             # Apply color_hist()
             hist_features = color_hist(feature_image, nbins=hist_bins)
             file_features.append(hist_features)
-        if hog_feat == True:
+        if hog_feat:
             # Call get_hog_features() with vis=False, feature_vec=True
             if hog_channel == 'ALL':
                 hog_features = []

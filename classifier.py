@@ -1,3 +1,4 @@
+# Imports
 import numpy as np
 import os
 import features
@@ -9,11 +10,20 @@ import cv2
 import visualizer
 
 class Classifier(object):
-    def __init__(self,num_examples,image_size):
-        self.root_car = '../vehicles'
-        self.root_notcars = '../non-vehicles'
 
-        self.colorspace = 'YCrCb'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
+    # Constructor
+    def __init__(self,num_train_examples,image):
+
+        # Data directories
+        self.root_car = 'vehicles'
+        self.root_notcars = 'non-vehicles'
+
+        # Data attributes
+        self.image_width = image.shape[0]
+        self.image_height = image.shape[1]
+        
+        # Define classifier attributes
+        self.color_space = 'YUV'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
         self.orient = 9
         self.pix_per_cell = 8
         self.cell_per_block = 2
@@ -23,37 +33,45 @@ class Classifier(object):
         self.spatial_feat = True
         self.hist_feat = True
         self.hog_feat = True
-        self.training_examples = num_examples
-        self.debug = False
+        self.num_train_examples = num_train_examples
 
-        self.image_width = image_size[0]
-        self.image_height = image_size[1]
+        # Sliding window search
+        windows_1 = self.slide_window(x_start_stop=[540,925],  y_start_stop=[400,432], xy_window=(16,16),   xy_overlap=(0, 0))
+        windows_2 = self.slide_window(x_start_stop=[600,1280], y_start_stop=[400,464], xy_window=(64,64),   xy_overlap=(0.5, 0))
+        windows_3 = self.slide_window(x_start_stop=[500,1280], y_start_stop=[400,496], xy_window=(96,96),   xy_overlap=(0.5, 0))
+        windows_4 = self.slide_window(x_start_stop=[520,1280], y_start_stop=[400,528], xy_window=(128,128), xy_overlap=(0.8, 0))
+        windows_5 = self.slide_window(x_start_stop=[340,1280], y_start_stop=[400,656], xy_window=(256,256), xy_overlap=(0.8, 0.8))
 
-        windows1 = self.slide_window(self.image_width,self.image_height, x_start_stop=[None, None], y_start_stop=[400,640],
-                                          xy_window=(128, 128), xy_overlap=(0.75, 0.75))
-        windows2 = self.slide_window(self.image_width,self.image_height, x_start_stop=[None, None], y_start_stop=[380,524],
-                                          xy_window=(48, 48), xy_overlap=(0.5, 0.5))
+        self.windows = windows_2 + windows_3 + windows_4
+        print("Number of Windows: ", len(self.windows))
 
-        self.windows = windows1 + windows2
-        print("Number of Windows" , len(self.windows))
+        # Debug
+        self.debug = True
+
+        if self.debug:
+            windows_image = visualizer.draw_boxes(cv2.cvtColor(image,cv2.COLOR_BGR2RGB), self.windows)
+            visualizer.draw_image(windows_image, "Windows",save=True)
 
     def train(self):
+        # Load data
         cars = self.fill_data(self.root_car)
         notcars = self.fill_data(self.root_notcars)
 
+        # Show an example of each kind and print number of examples
         if self.debug:
             test_car = visualizer.read_and_draw_image(cars[0],'Car')
             test_not_car = visualizer.read_and_draw_image(notcars[0],'No_Car')
+            print("Number of Car examples: ", len(cars))
+            print("Number of Non-Car examples: ", len(notcars))
 
-        print(len(cars),len(notcars))
         # TODO see if image ranges from 0 to 1
-        car_features = features.extract_features(cars[0:self.training_examples], color_space=self.colorspace,
+        car_features = features.extract_features(cars[0:self.num_train_examples], color_space=self.color_space,
                                                  spatial_size=self.spatial_size, hist_bins=self.hist_bins,
                                                  orient=self.orient, pix_per_cell=self.pix_per_cell,
                                                  cell_per_block=self.cell_per_block, hog_channel=self.hog_channel,
                                                  spatial_feat=self.spatial_feat, hist_feat=self.hist_feat,
                                                  hog_feat=self.hog_feat)
-        notcar_features = features.extract_features(notcars[0:self.training_examples], color_space=self.colorspace,
+        notcar_features = features.extract_features(notcars[0:self.num_train_examples], color_space=self.color_space,
                                                  spatial_size=self.spatial_size, hist_bins=self.hist_bins,
                                                  orient=self.orient, pix_per_cell=self.pix_per_cell,
                                                  cell_per_block=self.cell_per_block, hog_channel=self.hog_channel,
@@ -98,7 +116,7 @@ class Classifier(object):
               'pixels per cell and', self.cell_per_block, 'cells per block')
         print('Feature vector length:', len(X_train[0]))
         # Use a linear SVC
-        svc = LinearSVC()
+        svc = LinearSVC(C=1000)
         self.svc = svc
         # Check the training time for the SVC
         t = time.time()
@@ -107,6 +125,7 @@ class Classifier(object):
         print(round(t2 - t, 2), 'Seconds to train SVC...')
         # Check the score of the SVC
         print('Test Accuracy of SVC = ', round(svc.score(X_test, y_test), 4))
+
         # Check the prediction time for a single sample
         t = time.time()
         n_predict = 10
@@ -115,7 +134,7 @@ class Classifier(object):
         t2 = time.time()
         print(round(t2 - t, 5), 'Seconds to predict', n_predict, 'labels with SVC')
 
-    def classify(self,image):
+    def debug_classify(self,image):
         t1 = time.time()
 
 
@@ -134,6 +153,20 @@ class Classifier(object):
         return window_img, hot_windows
 
 
+    def classify(self,image):
+        t1 = time.time()
+
+
+        hot_windows = self.search_windows(image)
+
+        # draw_image = np.copy(image)
+        # window_img = visualizer.draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
+
+        t2 = time.time()
+        print(round(t2 - t1, 2), 'Seconds to classify one image')
+        return hot_windows
+
+
     def fill_data(self,directory):
         data_list = []
         for root,dirs,files in os.walk(directory):
@@ -144,7 +177,7 @@ class Classifier(object):
         return data_list
 
 
-    def slide_window(self,image_width,image_height, x_start_stop=(None, None), y_start_stop=(None, None),
+    def slide_window(self, x_start_stop=(None, None), y_start_stop=(None, None),
                      xy_window=(64, 64), xy_overlap=(0.5, 0.5)):
         """
         Method to slide a window over the image
@@ -162,7 +195,7 @@ class Classifier(object):
         else:
             x_start = x_start_stop[0]
         if not x_start_stop[1]:
-            x_stop = image_width
+            x_stop = self.image_width
         else:
             x_stop = x_start_stop[1]
         if not y_start_stop[0]:
@@ -170,7 +203,7 @@ class Classifier(object):
         else:
             y_start = y_start_stop[0]
         if not y_start_stop[1]:
-            y_stop = image_height
+            y_stop = self.image_height
         else:
             y_stop = y_start_stop[1]
 
@@ -203,30 +236,20 @@ class Classifier(object):
         # Return the list of windows
         return window_list
 
-    def search_windows(self,img, windows, clf, scaler, color_space='RGB',
-                        spatial_size=(32, 32), hist_bins=32,
-                        hist_range=(0, 256), orient=9,
-                        pix_per_cell=8, cell_per_block=2,
-                        hog_channel=0, spatial_feat=True,
-                        hist_feat=True, hog_feat=True):
+    def search_windows(self,img):
 
         #1) Create an empty list to receive positive detection windows
         on_windows = []
         #2) Iterate over all windows in the list
-        for window in windows:
+        for window in self.windows:
             #3) Extract the test window from original image
             test_img = cv2.resize(img[window[0][1]:window[1][1], window[0][0]:window[1][0]], (64, 64))
             #4) Extract features for that window using single_img_features()
-            features = self.single_img_features(test_img, color_space=color_space,
-                                spatial_size=spatial_size, hist_bins=hist_bins,
-                                orient=orient, pix_per_cell=pix_per_cell,
-                                cell_per_block=cell_per_block,
-                                hog_channel=hog_channel, spatial_feat=spatial_feat,
-                                hist_feat=hist_feat, hog_feat=hog_feat)
+            features = self.single_img_features(test_img)
             #5) Scale extracted features to be fed to classifier
-            test_features = scaler.transform(np.array(features).reshape(1, -1))
+            test_features = self.X_scaler.transform(np.array(features).reshape(1, -1))
             #6) Predict using your classifier
-            prediction = clf.predict(test_features)
+            prediction = self.svc.predict(test_features)
             #7) If positive (prediction == 1) then save the window
             if prediction == 1:
                 on_windows.append(window)
@@ -234,46 +257,43 @@ class Classifier(object):
         #8) Return windows for positive detections
         return on_windows
 
-    def single_img_features(self,img, color_space='RGB', spatial_size=(32, 32),
-                            hist_bins=32, orient=9,
-                            pix_per_cell=8, cell_per_block=2, hog_channel=0,
-                            spatial_feat=True, hist_feat=True, hog_feat=True):
+    def single_img_features(self,img):
         #1) Define an empty list to receive features
         img_features = []
         #2) Apply color conversion if other than 'RGB'
-        if color_space != 'RGB':
-            if color_space == 'HSV':
+        if self.color_space != 'RGB':
+            if self.color_space == 'HSV':
                 feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-            elif color_space == 'LUV':
+            elif self.color_space == 'LUV':
                 feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2LUV)
-            elif color_space == 'HLS':
+            elif self.color_space == 'HLS':
                 feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
-            elif color_space == 'YUV':
+            elif self.color_space == 'YUV':
                 feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2YUV)
-            elif color_space == 'YCrCb':
+            elif self.color_space == 'YCrCb':
                 feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
         else: feature_image = np.copy(img)
         #3) Compute spatial features if flag is set
-        if spatial_feat == True:
-            spatial_features = features.bin_spatial(feature_image, size=spatial_size)
+        if self.spatial_feat == True:
+            spatial_features = features.bin_spatial(feature_image, size=self.spatial_size)
             #4) Append features to list
             img_features.append(spatial_features)
         #5) Compute histogram features if flag is set
-        if hist_feat == True:
-            hist_features = features.color_hist(feature_image, nbins=hist_bins)
+        if self.hist_feat == True:
+            hist_features = features.color_hist(feature_image, nbins=self.hist_bins)
             #6) Append features to list
             img_features.append(hist_features)
         #7) Compute HOG features if flag is set
-        if hog_feat == True:
-            if hog_channel == 'ALL':
+        if self.hog_feat == True:
+            if self.hog_channel == 'ALL':
                 hog_features = []
                 for channel in range(feature_image.shape[2]):
                     hog_features.extend(features.get_hog_features(feature_image[:,:,channel],
-                                        orient, pix_per_cell, cell_per_block,
+                                        self.orient, self.pix_per_cell, self.cell_per_block,
                                         vis=False, feature_vec=True))
             else:
-                hog_features = features.get_hog_features(feature_image[:,:,hog_channel], orient,
-                            pix_per_cell, cell_per_block, vis=False, feature_vec=True)
+                hog_features = features.get_hog_features(feature_image[:,:,self.hog_channel], self.orient,
+                                        self.pix_per_cell, self.cell_per_block, vis=False, feature_vec=True)
             #8) Append features to list
             img_features.append(hog_features)
 
