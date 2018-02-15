@@ -10,15 +10,14 @@
 [image6]: ./output_images/No_Car_Channel_0.png "Y Channel of No Car"
 [image7]: ./output_images/No_Car_Channel_1.png "Cr Channel of No Car"
 [image8]: ./output_images/No_Car_Channel_2.png "Cb Channel of No Car"
-[image8]: ./output_images/ROI.png "Region of interest"
-[image10]: ./output_images/FirstDetection.png "Initial detection"
-[image11]: ./output_images/FinalDetection.png "Final detection"
+[image9]: ./output_images/Windows.png "Sliding windows"
+[image10]: ./output_images/FirstDetection.png "Detected Boxes"
 
 ### Pipeline
 
 The resulting video can be found on YouTube by clicking on the image below:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/sWeFX5Ad_jM/0.jpg)](https://youtu.be/sWeFX5Ad_jM)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Iu0Fz_IW6Ak/0.jpg)](https://youtu.be/Iu0Fz_IW6Ak)
 
 The executable code can be found in: `main.py`
 
@@ -65,7 +64,7 @@ A linear SVM with the above mentioned feature vector and as dataset 8500 example
 
 #### 4. Sliding window search
 
-A sliding window is applied with a window size of `xy_window = (96,96)` and an overlap of `xy_overlap = (0.5,0.5)` to search for detections of cars within the bottom part of the image. Therefore, a region of interest between the y-pixel values of `y_start_stop = [400,656]` is applied to save runtime and only look in potential regions. This region of interest is highlighted in the following image:  
+Three differnt window sizes are applied with a window size of `xy_window = 64,96 and 128` and overlaps of `xy_overlap = 0.5,0.5,0.8` to search for detections of cars within the image. Therefore, a region of interest between the y-pixel values of `y_start_stop = [400,528]` is applied to reduce runtime and only look in potential regions. The investigated windows are highlighted in the following image:  
 
 ![alt text][image9]
 
@@ -75,11 +74,7 @@ Ultimately, all detected parts of cars where gathered over the entire sliding wi
 
 ![alt text][image10]
 
-With `scipy.ndimage.measurements import label` all overlapping windows are combined which leads to following final detection result.
-
-![alt text][image11]
-
-The code can be found within `heatmap.py`.
+With `scipy.ndimage.measurements import label` all overlapping windows are combined. The code can be found within `heatmap.py`.
 
 ### Tracking
 
@@ -99,5 +94,5 @@ The tracking result can be found in the video on the top of this page.
 
 ### Discussion
 
-In the middle of the video sequence, the detection method has problems to detect the white car. A more detailed research has to be performed in future to probably adapt the feature vector or to add or change the used colorspace. Moreover, the tracking method struggles when the objects are occluded or close to each other. The occuring merging of bounding boxes or lost tracks need to be further investigated.
+The tracking method struggles when the objects are occluded or close to each other. The occuring merging of bounding boxes or lost tracks need to be further investigated.
 
