@@ -9,17 +9,17 @@ Sensor Fusion and Localization related projects of Udacity's Self-driving Car Na
 ## Extended Kalman Filter for Object Tracking
 
 <p align="center">
-  <img src="./LaneDetection/lane_detection.gif">
+  <img src="./ExtendedKalmanFilter/ekf.gif">
 </p>
 
 ## Unscented Kalman Filter for Object Tracking
 
 <p align="center">
-  <img src="./CameraBasedVehicleTracking/vehicle_tracking.gif">
+  <img src="./UnscentedKalmanFilter/ukf.gif">
 </p>
 
 ## Particle Filter for Localization
 
 <p align="center">
-  <img src="./TrafficSignClassification/traffic_sign_classification.png">
+  <img src="./ParticleFilter/pf.png">
 </p>
