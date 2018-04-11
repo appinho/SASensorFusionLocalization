@@ -21,5 +21,5 @@ Sensor Fusion and Localization related projects of Udacity's Self-driving Car Na
 ## Particle Filter for Localization
 
 <p align="center">
-  <img src="./ParticleFilter/pf.png">
+  <img src="./ParticleFilter/pf.gif">
 </p>
